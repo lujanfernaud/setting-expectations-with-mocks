@@ -4,14 +4,13 @@ require "signup"
 describe Signup do
   describe "#save" do
     it "creates an account with one user" do
-      email        = "user@example.com"
-      account_name = "Example"
-      account      = double("example_account", name: account_name)
+      email   = "user@example.com"
+      account = double("account", name: "Example")
 
-      mock_account_creation_with(account, account_name)
+      mock_account_creation_with(account)
       mock_user_creation_with(account, email)
 
-      signup = Signup.new(email: email, account_name: account_name)
+      signup = Signup.new(email: email, account_name: account.name)
       result = signup.save
 
       expect(result).to be(true)
@@ -20,15 +19,14 @@ describe Signup do
 
   describe "#user" do
     it "returns the user created by #save" do
-      email        = "user@example.com"
-      account_name = "Example"
-      account      = double("example_account", name: account_name)
-      user         = double("user", email: email, account: account)
+      email   = "user@example.com"
+      account = double("account", name: "Example")
+      user    = double("user", email: email, account: account)
 
-      mock_account_creation_with(account, account_name)
+      mock_account_creation_with(account)
       mock_user_creation_with(account, email).and_return(user)
 
-      signup = Signup.new(email: email, account_name: account_name)
+      signup = Signup.new(email: email, account_name: account.name)
       signup.save
 
       result = signup.user
@@ -38,9 +36,9 @@ describe Signup do
     end
   end
 
-  def mock_account_creation_with(account, account_name)
+  def mock_account_creation_with(account)
     expect(Account).to receive(:create!)
-      .with(name: account_name)
+      .with(name: account.name)
       .and_return(account)
   end
 
